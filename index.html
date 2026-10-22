@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Notes+</title>
+<style>
+:root{--paper:#f9f9f7;--ink:#171717;--muted:#888;--blue:#006699;--line:#e7e6e1}
+*{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+body{background:#f0f0ee;min-height:100dvh;display:flex;justify-content:center;align-items:center;color:var(--ink);padding:12px}
+.phone-container{width:min(100%,430px);height:min(900px,calc(100dvh - 24px));min-height:540px;background:var(--paper);border-radius:32px;box-shadow:0 10px 35px #0002;position:relative;overflow:hidden;display:flex;flex-direction:column;border:7px solid #222}
+.header{display:flex;justify-content:space-between;align-items:center;padding:19px 20px 12px;gap:12px;flex-shrink:0}
+.header h1{font-size:23px;font-weight:750;letter-spacing:-.7px}
+.header-icons{display:flex;gap:6px;align-items:center}
+.share-wrap{position:relative}
+.share-top-btn{font-size:12px!important;font-weight:650;background:#f0f0ec;border:1px solid #e6e5df;padding:7px 10px!important;border-radius:10px!important;white-space:nowrap}
+.share-menu{position:absolute;right:0;top:42px;z-index:15;background:#fff;border:1px solid #e7e6e1;border-radius:12px;padding:5px;min-width:145px;box-shadow:0 8px 24px #0002}
+.share-menu button{display:block;width:100%;border:0;background:transparent;text-align:left;padding:10px 11px;border-radius:8px;font-size:13px;color:#222;cursor:pointer}
+.share-menu button:hover{background:#f2f2ee}
+.more-menu{min-width:140px}.more-menu.date-open{width:260px;max-width:calc(100vw - 70px)}.more-menu .menu-item{display:block;width:100%;border:0;background:transparent;text-align:left;padding:10px 11px;border-radius:8px;font-size:13px;color:#222;cursor:pointer}.more-menu .menu-item:hover{background:#f2f2ee}.more-menu .date-filter{margin:4px 2px 3px;padding:9px;background:#f7f7f4}.more-menu .date-filter-heading{display:block}.more-menu .date-filter-heading span{display:block;text-align:left;margin-top:3px}.more-menu .date-filter-fields{grid-template-columns:1fr}.more-menu .date-field{font-size:12px}.more-menu .date-filter-actions{flex-wrap:wrap}
+.more-menu button.delete-menu-item{color:#b42318}
+.icon-btn{border:0;background:transparent;color:#333;cursor:pointer;font-size:19px;padding:8px;border-radius:12px}
+.icon-btn:hover{background:#00008}
+.status{font-size:11px;color:#777;padding:0 22px 8px;min-height:20px}
+.status.online{color:#267448}.status.error{color:#b42318}
+.auth-panel{margin:16px 20px;padding:20px;border:1px solid var(--line);border-radius:18px;background:#fff}
+.auth-panel h2{font-size:20px;margin-bottom:6px}.auth-panel p{font-size:13px;color:#777;line-height:1.5;margin-bottom:14px}
+.field{width:100%;border:1px solid #deded8;background:#fff;border-radius:12px;padding:12px 13px;font-size:15px;outline:none;margin:5px 0}
+.field:focus{border-color:var(--blue);box-shadow:0 0 0 3px #00669918}
+.primary,.secondary{border:0;border-radius:12px;padding:12px 14px;cursor:pointer;font-weight:650;font-size:14px}
+.primary{background:var(--blue);color:#fff}.secondary{background:#efefeb;color:#222}
+.auth-actions{display:flex;gap:8px;margin-top:8px}.auth-actions button{flex:1}
+.workspace{display:flex;flex:1;min-height:0;flex-direction:column}
+.search-wrap{padding:0 20px 8px;flex-shrink:0}
+.search{width:100%;border:1px solid #e8e7e1;background:#f1f1ed;border-radius:13px;padding:11px 13px;font-size:14px;outline:none}
+.date-filter{margin:0 20px 8px;padding:10px 11px;background:#f1f1ed;border:1px solid #e8e7e1;border-radius:13px;flex-shrink:0}
+.date-filter-heading{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px}.date-filter-heading strong{font-size:12px;font-weight:700}.date-filter-heading span{font-size:10px;color:#888;text-align:right}
+.date-filter-fields{display:grid;grid-template-columns:1fr 1fr;gap:8px}.date-filter-fields label{font-size:10px;color:#777;display:flex;flex-direction:column;gap:4px}
+.date-field{min-width:0;width:100%;padding:7px 6px;border:1px solid #deded8;border-radius:8px;background:#fff;font-size:12px;color:#222}
+.date-filter-actions{display:flex;gap:7px;margin-top:8px}.date-action{border:1px solid #e0dfd9;background:#fff;color:#333;border-radius:8px;padding:6px 10px;font-size:11px;font-weight:650;cursor:pointer}.date-action.apply-date{background:var(--blue);border-color:var(--blue);color:#fff}
+.note-count{font-size:12px;color:#888;padding:3px 22px 9px;flex-shrink:0}
+.date-groups{flex:1;min-height:0;overflow:auto;padding:2px 20px 80px}.date-group-row{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;padding:15px 14px;margin-bottom:8px;border:1px solid var(--line);border-radius:14px;background:#fff;text-align:left;cursor:pointer;color:var(--ink)}.date-group-row strong{font-size:14px;font-weight:700}.date-group-row span{font-size:12px;color:#777;white-space:nowrap}.date-group-row:hover{background:#f4f4f0}.date-list-heading{font-size:12px;color:#888;padding:4px 2px 10px}.slider-window{flex:1;min-height:0;overflow:hidden;position:relative;touch-action:pan-y}
+.slider-container{height:100%;display:flex;transition:transform .28s ease-out;will-change:transform}
+.note-page{flex:0 0 100%;width:100%;padding:8px 22px 18px;display:flex;flex-direction:column;min-width:0}
+.note-title{font-size:24px;font-weight:730;border:0;background:transparent;outline:none;color:#111;margin-bottom:7px;width:100%;letter-spacing:-.6px}
+.note-date{font-size:12px;color:#888;margin-bottom:18px;line-height:1.4}
+.note-content{flex:1;min-height:90px;border:0;background:transparent;outline:none;font-size:16px;line-height:1.65;color:#333;resize:none;width:100%}
+.empty{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#888;gap:8px;padding:25px}
+.empty strong{font-size:18px;color:#333}
+.dots-container{display:flex;justify-content:center;gap:7px;padding:10px 0 17px;flex-shrink:0;max-width:70%;align-self:center;overflow:hidden}
+.dot{width:6px;height:6px;flex-shrink:0;border-radius:50%;background:#ccc;border:0;padding:0;cursor:pointer;transition:all .2s}
+.dot.active{background:#222;width:17px;border-radius:5px}
+.fab{position:absolute;bottom:24px;right:19px;width:54px;height:54px;background:var(--blue);border:0;border-radius:16px;display:flex;justify-content:center;align-items:center;color:white;font-size:30px;cursor:pointer;box-shadow:0 4px 12px #00669944;z-index:5}
+.fab:active{transform:scale(.96)}
+.footer{font-size:10px;color:#999;text-align:center;padding:0 0 8px;flex-shrink:0}
+.hidden{display:none!important}
+.toast{position:absolute;left:50%;bottom:88px;transform:translateX(-50%);background:#222;color:#fff;border-radius:10px;padding:10px 14px;font-size:12px;max-width:85%;z-index:10;text-align:center;box-shadow:0 5px 20px #0002}
+.modal-backdrop{position:absolute;inset:0;background:#0005;z-index:20;display:flex;align-items:center;justify-content:center;padding:20px}
+.modal{background:var(--paper);border-radius:20px;padding:20px;width:100%;max-width:330px;box-shadow:0 15px 40px #0003}
+.modal h3{font-size:19px;margin-bottom:9px}.modal p{font-size:13px;color:#666;line-height:1.5;margin-bottom:16px}.modal-actions{display:flex;gap:8px;justify-content:flex-end}
+@media(max-width:480px){body{padding:0;background:var(--paper)}.phone-container{width:100%;height:100dvh;min-height:500px;border:0;border-radius:0;box-shadow:none}.header{padding-top:max(17px,env(safe-area-inset-top))}.fab{bottom:max(22px,env(safe-area-inset-bottom))}}
+@media(min-width:700px){.phone-container{height:min(850px,calc(100dvh - 40px));border:7px solid #222;border-radius:32px}}
+</style>
+</head>
+<body>
+<div class="phone-container">
+  <div class="header">
+    <h1>Notes<span style="color:var(--blue)">+</span></h1>
+    <div class="header-icons">
+      <div class="share-wrap">
+        <button class="icon-btn share-top-btn" id="shareToggle" title="Share note" aria-label="Share note">↗ Share</button>
+        <div class="share-menu hidden" id="shareMenu">
+          <button id="shareTextBtn">Share as Text</button>
+          <button id="shareImageBtn">Share as Image</button>
+        </div>
+      </div>
+      <div class="share-wrap">
+        <button class="icon-btn" id="moreToggle" title="More options" aria-label="More options">⋮</button>
+        <div class="share-menu more-menu hidden" id="moreMenu">
+          <button class="menu-item" id="browseDateBtn">Browse by date</button>
+          <div class="date-filter hidden" id="dateFilter" aria-label="Filter notes by date">
+            <div class="date-filter-heading"><strong>Filter notes</strong><span>Choose a date or date range</span></div>
+            <div class="date-filter-fields">
+              <label>From <input class="date-field" id="dateFrom" type="date" aria-label="Start date"></label>
+              <label>To <input class="date-field" id="dateTo" type="date" aria-label="End date"></label>
+            </div>
+            <div class="date-filter-actions"><button class="date-action apply-date" id="applyDateFilter">Apply</button><button class="date-action" id="clearDateFilter">Clear dates</button></div>
+          </div>
+          <button class="delete-menu-item" id="deleteNoteBtn">Delete note</button>
+        </div>
+      </div>
+      <button class="icon-btn" id="searchToggle" title="Search" aria-label="Search">⌕</button>
+      <button class="icon-btn" id="accountBtn" title="Account" aria-label="Account">👤</button>
+    </div>
+  </div>
+  <div class="status" id="status">Sign in to enable cloud sync.</div>
+  <section class="auth-panel" id="authPanel">
+    <h2>Your notes, everywhere.</h2>
+    <p>Sign in to sync notes across devices, or continue without logging in. Guest notes are saved on this device only.</p>
+    <input class="field" id="email" type="email" autocomplete="email" placeholder="Email address">
+    <input class="field" id="password" type="password" autocomplete="current-password" placeholder="Password (at least 6 characters)">
+    <div class="auth-actions">
+      <button class="primary" id="signInBtn">Sign in</button>
+      <button class="secondary" id="signUpBtn">Create account</button>
+    </div>
+    <button class="secondary" id="guestBtn" style="width:100%;margin-top:10px">Continue without login</button>
+    <p id="authHint" style="margin:12px 0 0;font-size:11px">Account features require Firebase configuration.</p>
+  </section>
+  <section class="workspace hidden" id="workspace">
+    <div class="search-wrap hidden" id="searchWrap"><input class="search" id="searchInput" placeholder="Search notes..." type="search"></div>
+    <div class="note-count" id="noteCount">0 notes</div>
+    <div class="date-groups hidden" id="dateGroups"></div>
+    <div class="slider-window" id="sliderWindow">
+      <div class="slider-container" id="slider"></div>
+    </div>
+    <div class="dots-container" id="dots"></div>
+    <div class="footer" id="footer">Private notes · Cloud sync</div>
+  </section>
+  <button class="fab hidden" id="addBtn" aria-label="Add new note" title="New note">+</button>
+  <div class="toast hidden" id="toast"></div>
+  <div class="modal-backdrop hidden" id="modalBackdrop">
+    <div class="modal">
+      <h3 id="modalTitle">Delete note?</h3>
+      <p id="modalText">This note will be deleted from your account and synced devices.</p>
+      <div class="modal-actions"><button class="secondary" id="cancelDelete">Cancel</button><button class="primary" id="confirmDelete" style="background:#b42318">Delete</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- Firebase compat SDK. Configure your Firebase project below before use. -->
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<script>
+/*
+ SETUP:
+ 1. Create a Firebase project at https://console.firebase.google.com/
+ 2. Add a Web app and copy its firebaseConfig values below.
+ 3. Authentication > Sign-in method > enable Email/Password.
+ 4. Firestore Database > create database.
+ 5. Publish the security rules provided alongside this file in the setup instructions.
+ Do not put service-account/private server keys in this HTML.
+*/
+const firebaseConfig = {
+  apiKey: "AIzaSyCbniOQ1aMinivu3RrD3KMTzBphI8YdVX4",
+  authDomain: "notes-plus-3769d.firebaseapp.com",
+  projectId: "notes-plus-3769d",
+  storageBucket: "notes-plus-3769d.firebasestorage.app",
+  messagingSenderId: "40980201180",
+  appId: "1:40980201180:web:039f579a8ee71c91af7e19"
+};
+
+const $ = id => document.getElementById(id);
+const authPanel=$('authPanel'), workspace=$('workspace'), slider=$('slider'), dots=$('dots');
+let auth=null, db=null, user=null, guestMode=false, notes=[], filteredNotes=[], currentIndex=0, unsubscribe=null, dateListMode=false;
+const GUEST_STORAGE_KEY='notes_plus_guest_notes_v1';
+let saveTimers=new Map(), dragStartX=0, dragStartY=0, dragging=false, pendingDelete=null, toastTimer=null;
+const configReady = firebaseConfig.apiKey && !firebaseConfig.apiKey.startsWith('PASTE_') &&
+  firebaseConfig.projectId && !firebaseConfig.projectId.startsWith('PASTE_') &&
+  firebaseConfig.appId && !firebaseConfig.appId.startsWith('PASTE_');
+
+function setStatus(message,kind=''){ $('status').textContent=message; $('status').className='status '+kind; }
+function toast(message){const el=$('toast');el.textContent=message;el.classList.remove('hidden');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.add('hidden'),2600);}
+function escapeHtml(s=''){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function dateLabel(ts){const d=ts?.toDate?ts.toDate():new Date(ts||Date.now());return d.toLocaleString(undefined,{weekday:'short',month:'short',day:'numeric',year:'numeric'})+' · Updated '+d.toLocaleTimeString(undefined,{hour:'2-digit',minute:'2-digit'});}
+function initFirebase(){
+ if(!configReady){setStatus('Firebase is not configured yet. Follow the setup instructions.','error');$('authHint').textContent='The app is ready; Firebase configuration is required for cloud sync.';return false;}
+ try{firebase.initializeApp(firebaseConfig);auth=firebase.auth();db=firebase.firestore();
+ auth.onAuthStateChanged(u=>{user=u||null;if(user)guestMode=false;renderAuth();if(user){setStatus('Cloud connected · '+user.email,'online');listenNotes();}else{if(unsubscribe){unsubscribe();unsubscribe=null;}if(!guestMode){notes=[];filteredNotes=[];renderNotes();setStatus('Sign in or continue without logging in.');}}});
+ return true;}catch(e){setStatus('Firebase initialization error: '+e.message,'error');return false;}
+}
+function renderAuth(){
+ const signed=!!user||guestMode;authPanel.classList.toggle('hidden',signed);workspace.classList.toggle('hidden',!signed);$('addBtn').classList.toggle('hidden',!signed);
+ $('accountBtn').textContent=user?'↪':guestMode?'👤':'👤';$('accountBtn').title=user?'Sign out':guestMode?'Login / cloud sync':'Account';
+}
+async function signIn(signUp){
+ if(!auth){toast('Please configure Firebase first.');return;}
+ const email=$('email').value.trim(),password=$('password').value;
+ if(!email||!password){toast('Enter both email and password.');return;}
+ if(password.length<6){toast('Password must be at least 6 characters.');return;}
+ try{setStatus(signUp?'Creating account…':'Signing in…');if(signUp)await auth.createUserWithEmailAndPassword(email,password);else await auth.signInWithEmailAndPassword(email,password);$('password').value='';}
+ catch(e){setStatus(friendlyError(e),'error');}
+}
+function friendlyError(e){const m={'auth/email-already-in-use':'An account already exists for this email. Please sign in.','auth/invalid-email':'Please enter a valid email address.','auth/weak-password':'Please use a stronger password.','auth/user-not-found':'Account not found. Check your email or create an account.','auth/wrong-password':'Incorrect password.','auth/invalid-credential':'Incorrect email or password.','auth/too-many-requests':'Too many attempts. Please try again later.','permission-denied':'Please check your Firestore rules.'};return m[e.code]||e.message||'Something went wrong. Please try again.';}
+function listenNotes(){
+ if(!user||!db)return;if(unsubscribe)unsubscribe();
+ unsubscribe=db.collection('users').doc(user.uid).collection('notes').orderBy('updatedAt','desc').onSnapshot(snap=>{
+  notes=snap.docs.map(d=>({id:d.id,...d.data()}));applySearch();setStatus('All changes synced · '+user.email,'online');
+ },err=>setStatus('Cloud sync error: '+friendlyError(err),'error'));
+}
+function noteDateMillis(n){const v=n.createdAt||n.updatedAt||Date.now();if(v&&typeof v.toDate==='function')return v.toDate().getTime();const ms=new Date(v).getTime();return Number.isFinite(ms)?ms:Date.now();}
+function applySearch(){
+ const q=$('searchInput').value.trim().toLowerCase();
+ const from=$('dateFrom').value, to=$('dateTo').value;
+ const fromMs=from?new Date(from+'T00:00:00').getTime():null;
+ const toMs=to?new Date(to+'T23:59:59.999').getTime():null;
+ filteredNotes=notes.filter(n=>{const textMatch=(n.title||'').toLowerCase().includes(q)||(n.content||'').toLowerCase().includes(q);const stamp=noteDateMillis(n);return textMatch&&(fromMs===null||stamp>=fromMs)&&(toMs===null||stamp<=toMs);});
+ if(currentIndex>=filteredNotes.length)currentIndex=Math.max(0,filteredNotes.length-1);
+ renderNotes();
+}
+function renderNotes(){
+ slider.innerHTML='';dots.innerHTML='';
+ const groups=$('dateGroups');
+ $('noteCount').textContent=filteredNotes.length+' '+(filteredNotes.length===1?'note':'notes');
+ groups.classList.toggle('hidden',!dateListMode);$('sliderWindow').classList.toggle('hidden',dateListMode);dots.classList.toggle('hidden',dateListMode);
+ if(dateListMode){renderDateGroups();return;}
+ if(!filteredNotes.length){
+  slider.innerHTML='<div class="note-page"><div class="empty"><strong>'+(notes.length?'No matching notes':'Your notes start here')+'</strong><span>'+(notes.length?'Change your search or clear it.':'Tap the blue + button to create your first note.')+'</span></div></div>';
+  return;
+ }
+ filteredNotes.forEach((n,i)=>{
+  const page=document.createElement('div');page.className='note-page';
+  page.innerHTML=`<input class="note-title" data-id="${escapeHtml(n.id)}" aria-label="Note title" placeholder="Untitled note" value="${escapeHtml(n.title||'')}">
+  <div class="note-date">${escapeHtml(dateLabel(n.updatedAt||n.createdAt))}</div>
+  <textarea class="note-content" data-id="${escapeHtml(n.id)}" aria-label="Note content" placeholder="Start writing your note here...">${escapeHtml(n.content||'')}</textarea>
+`;
+  slider.appendChild(page);
+  const dot=document.createElement('button');dot.className='dot'+(i===currentIndex?' active':'');dot.title='Note '+(i+1);dot.setAttribute('aria-label','Go to note '+(i+1));dot.addEventListener('click',()=>{currentIndex=i;updateSlide();});dots.appendChild(dot);
+ });
+ slider.querySelectorAll('input.note-title,textarea.note-content').forEach(el=>el.addEventListener('input',()=>queueSave(el.dataset.id,el)));
+ updateSlide();
+}
+function dateGroupKey(n){const d=new Date(noteDateMillis(n));return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
+function renderDateGroups(){
+ const el=$('dateGroups');el.innerHTML='';
+ const groups=new Map();
+ filteredNotes.forEach(n=>{const key=dateGroupKey(n);if(!groups.has(key))groups.set(key,[]);groups.get(key).push(n);});
+ const heading=document.createElement('div');heading.className='date-list-heading';heading.textContent='NOTES BY DATE';el.appendChild(heading);
+ if(!groups.size){const empty=document.createElement('div');empty.className='empty';empty.innerHTML='<strong>No notes found</strong><span>Choose another date range or clear the dates.</span>';el.appendChild(empty);return;}
+ [...groups.entries()].sort((a,b)=>b[0].localeCompare(a[0])).forEach(([key,items])=>{
+  const d=new Date(key+'T12:00:00');const label=d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}).replace(/^(\d{1,2}) /,'$1 ');
+  const row=document.createElement('button');row.className='date-group-row';
+  const date=document.createElement('strong');date.textContent=label;
+  const count=document.createElement('span');count.textContent=items.length+' '+(items.length===1?'note':'notes');
+  row.append(date,count);row.addEventListener('click',()=>{const value=key;$('dateFrom').value=value;$('dateTo').value=value;dateListMode=false;currentIndex=0;applySearch();});el.appendChild(row);
+ });
+}
+function updateSlide(){
+ currentIndex=Math.max(0,Math.min(currentIndex,Math.max(0,filteredNotes.length-1)));
+ slider.style.transform=`translateX(${-currentIndex*100}%)`;
+ [...dots.children].forEach((d,i)=>d.classList.toggle('active',i===currentIndex));
+}
+function queueSave(id,el){
+ const note=notes.find(n=>n.id===id);if(!note||(!guestMode&&(!user||!db)))return;
+ const page=el.closest('.note-page'),titleEl=page.querySelector('.note-title'),contentEl=page.querySelector('.note-content');
+ const title=titleEl.value.trim(),content=contentEl.value;
+ note.title=title;note.content=content;
+ setStatus(guestMode?'Saving on this device…':'Saving…');
+ clearTimeout(saveTimers.get(id));
+ saveTimers.set(id,setTimeout(async()=>{
+  try{if(guestMode){note.updatedAt=Date.now();saveGuestNotes();setStatus('Saved on this device · guest mode','online');}else{await db.collection('users').doc(user.uid).collection('notes').doc(id).set({title,content,updatedAt:firebase.firestore.FieldValue.serverTimestamp(),createdAt:note.createdAt||firebase.firestore.FieldValue.serverTimestamp()},{merge:true});setStatus('Saved to cloud · '+user.email,'online');}}
+  catch(e){setStatus('Save failed: '+friendlyError(e),'error');}
+ },350));
+}
+async function addNewNote(){
+ if(guestMode){const id='local-'+Date.now()+'-'+Math.random().toString(36).slice(2,7);notes.unshift({id,title:'',content:'',createdAt:Date.now(),updatedAt:Date.now()});saveGuestNotes();$('searchInput').value='';applySearch();currentIndex=0;updateSlide();setTimeout(()=>{const el=slider.querySelector(`.note-title[data-id="${CSS.escape(id)}"]`);if(el)el.focus();},80);return;}
+ if(!user||!db)return;
+ try{
+  const ref=await db.collection('users').doc(user.uid).collection('notes').add({title:'',content:'',createdAt:firebase.firestore.FieldValue.serverTimestamp(),updatedAt:firebase.firestore.FieldValue.serverTimestamp()});
+  $('searchInput').value='';applySearch();currentIndex=Math.max(0,filteredNotes.findIndex(n=>n.id===ref.id));updateSlide();
+  setTimeout(()=>{const el=slider.querySelector(`.note-title[data-id="${CSS.escape(ref.id)}"]`);if(el)el.focus();},80);
+ }catch(e){toast('Could not create note: '+friendlyError(e));}
+}
+function saveGuestNotes(){try{localStorage.setItem(GUEST_STORAGE_KEY,JSON.stringify(notes));}catch(e){toast('Device storage may be full.');}}
+function continueAsGuest(){guestMode=true;user=null;notes=[];try{notes=JSON.parse(localStorage.getItem(GUEST_STORAGE_KEY)||'[]');if(!Array.isArray(notes))notes=[];}catch(e){notes=[];}currentIndex=0;renderAuth();applySearch();setStatus('Guest mode · notes are saved on this device only.','online');$('footer').textContent='Private notes · This device only';}
+function getCurrentNoteForShare(){
+ const page=slider.querySelectorAll('.note-page')[currentIndex];
+ const title=page?.querySelector('.note-title')?.value ?? filteredNotes[currentIndex]?.title ?? '';
+ const content=page?.querySelector('.note-content')?.value ?? filteredNotes[currentIndex]?.content ?? '';
+ if(!filteredNotes.length){toast('Create a note before sharing.');return null;}
+ return {title:title.trim()||'Untitled note',content};
+}
+function wrapCanvasText(ctx,text,maxWidth){
+ const lines=[];
+ for(const paragraph of String(text||'').split('\n')){
+  if(!paragraph){lines.push('');continue;}
+  let line='';
+  for(const word of paragraph.split(/\s+/)){
+   const test=line?line+' '+word:word;
+   if(line&&ctx.measureText(test).width>maxWidth){lines.push(line);line=word;}
+   else line=test;
+   while(ctx.measureText(line).width>maxWidth){
+    let part='';
+    for(const ch of line){if(ctx.measureText(part+ch).width>maxWidth&&part){lines.push(part);part=ch;}else part+=ch;}
+    line=part;
+   }
+  }
+  lines.push(line);
+ }
+ return lines;
+}
+async function shareAsText(){
+ const note=getCurrentNoteForShare();if(!note)return;
+ const textContent=note.title+'\n\n'+note.content;
+ try{
+  if(navigator.share)await navigator.share({title:note.title,text:textContent});
+  else if(navigator.clipboard?.writeText){await navigator.clipboard.writeText(textContent);toast('Note text copied. Paste it into WhatsApp or another app.');}
+  else{const area=document.createElement('textarea');area.value=textContent;document.body.appendChild(area);area.select();document.execCommand('copy');area.remove();toast('Note text copied.');}
+ }catch(e){if(e.name!=='AbortError')toast('Could not share. Please try again.');}
+ $('shareMenu').classList.add('hidden');
+}
+async function shareAsImage(){
+ const note=getCurrentNoteForShare();if(!note)return;
+ try{
+  const canvas=document.createElement('canvas'),ctx=canvas.getContext('2d');
+  const width=900,pad=64,titleSize=48,bodySize=38,lineHeight=58;
+  canvas.width=width;ctx.font=`${titleSize}px -apple-system, BlinkMacSystemFont, sans-serif`;
+  const titleLines=wrapCanvasText(ctx,note.title,width-pad*2);
+  ctx.font=`${bodySize}px -apple-system, BlinkMacSystemFont, sans-serif`;
+  const bodyLines=wrapCanvasText(ctx,note.content,width-pad*2);
+  const titleHeight=titleLines.length*68,bodyHeight=Math.max(1,bodyLines.length)*lineHeight;
+  canvas.height=Math.max(600,pad*2+titleHeight+30+bodyHeight+40);
+  ctx.fillStyle='#fdfcf5';ctx.fillRect(0,0,width,canvas.height);
+  let y=pad+titleSize;
+  ctx.fillStyle='#171717';ctx.font=`700 ${titleSize}px -apple-system, BlinkMacSystemFont, sans-serif`;
+  titleLines.forEach(line=>{ctx.fillText(line,pad,y);y+=68;});
+  y+=25;ctx.fillStyle='#333';ctx.font=`${bodySize}px -apple-system, BlinkMacSystemFont, sans-serif`;
+  bodyLines.forEach(line=>{ctx.fillText(line,pad,y);y+=lineHeight;});
+  const blob=await new Promise((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(new Error('Could not create image')),'image/png'));
+  const file=new File([blob],(note.title.replace(/[^a-z0-9-_ ]/gi,'').trim()||'note')+'.png',{type:'image/png'});
+  if(navigator.canShare&&navigator.canShare({files:[file]}))await navigator.share({files:[file]});
+  else{const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=file.name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1500);toast('Image downloaded. You can now share it.');}
+ }catch(e){if(e.name!=='AbortError')toast('Could not share image: '+e.message);}
+ $('shareMenu').classList.add('hidden');
+}
+function askDelete(id){pendingDelete=id;$('modalBackdrop').classList.remove('hidden');}
+async function deleteNote(){
+ if(!pendingDelete||(!guestMode&&(!user||!db)))return;const id=pendingDelete;pendingDelete=null;$('modalBackdrop').classList.add('hidden');
+ try{for(const t of saveTimers.values())clearTimeout(t);saveTimers.clear();if(guestMode){notes=notes.filter(n=>n.id!==id);saveGuestNotes();applySearch();setStatus('Saved on this device · guest mode','online');}else{await db.collection('users').doc(user.uid).collection('notes').doc(id).delete();}toast('Note deleted.');}
+ catch(e){toast('Could not delete note: '+friendlyError(e));}
+}
+$('signInBtn').addEventListener('click',()=>signIn(false));$('signUpBtn').addEventListener('click',()=>signIn(true));
+$('password').addEventListener('keydown',e=>{if(e.key==='Enter')signIn(false);});
+$('addBtn').addEventListener('click',addNewNote);
+$('shareToggle').addEventListener('click',()=>{if(!user&&!guestMode){toast('Continue without logging in or sign in.');return;}if(!filteredNotes.length){toast('Create a note before sharing.');return;}$('shareMenu').classList.toggle('hidden');});
+$('shareTextBtn').addEventListener('click',shareAsText);
+$('shareImageBtn').addEventListener('click',shareAsImage);
+$('moreToggle').addEventListener('click',()=>{if(!user&&!guestMode){toast('Continue without logging in or sign in.');return;}if(!filteredNotes.length){toast('Create a note before opening note options.');return;}$('moreMenu').classList.toggle('hidden');$('shareMenu').classList.add('hidden');});
+$('browseDateBtn').addEventListener('click',()=>{const panel=$('dateFilter');panel.classList.toggle('hidden');$('moreMenu').classList.toggle('date-open',!panel.classList.contains('hidden'));if(panel.classList.contains('hidden')){dateListMode=true;renderNotes();$('moreMenu').classList.add('hidden');}});
+$('deleteNoteBtn').addEventListener('click',()=>{const n=filteredNotes[currentIndex];$('moreMenu').classList.add('hidden');if(n)askDelete(n.id);});
+document.addEventListener('click',e=>{if(!e.target.closest('.share-wrap')){$('shareMenu').classList.add('hidden');$('moreMenu').classList.add('hidden');}});
+$('guestBtn').addEventListener('click',continueAsGuest);
+$('accountBtn').addEventListener('click',async()=>{if(user&&auth){if(confirm('Do you want to sign out?'))await auth.signOut();}else if(guestMode){if(confirm('Return to the sign-in screen? Guest notes will remain saved on this device.')){guestMode=false;renderAuth();setStatus('Sign in or continue without logging in.');}}else $('email').focus();});
+$('searchToggle').addEventListener('click',()=>{const w=$('searchWrap');w.classList.toggle('hidden');if(!w.classList.contains('hidden'))$('searchInput').focus();else{$('searchInput').value='';applySearch();}});
+$('searchInput').addEventListener('input',()=>{currentIndex=0;applySearch();});
+$('applyDateFilter').addEventListener('click',()=>{const from=$('dateFrom').value,to=$('dateTo').value;if(from&&to&&from>to){toast('Start date must be on or before end date.');return;}currentIndex=0;dateListMode=true;applySearch();$('dateFilter').classList.add('hidden');$('moreMenu').classList.remove('date-open');$('moreMenu').classList.add('hidden');toast('Showing notes grouped by date.');});
+$('clearDateFilter').addEventListener('click',()=>{$('dateFrom').value='';$('dateTo').value='';currentIndex=0;dateListMode=true;applySearch();$('dateFilter').classList.add('hidden');$('moreMenu').classList.remove('date-open');$('moreMenu').classList.add('hidden');toast('Date filters cleared.');});
+$('cancelDelete').addEventListener('click',()=>{$('modalBackdrop').classList.add('hidden');pendingDelete=null;});
+$('confirmDelete').addEventListener('click',deleteNote);
+$('modalBackdrop').addEventListener('click',e=>{if(e.target===$('modalBackdrop')){$('modalBackdrop').classList.add('hidden');pendingDelete=null;}});
+const win=$('sliderWindow');
+win.addEventListener('touchstart',e=>{if(e.touches.length!==1)return;dragStartX=e.touches[0].clientX;dragStartY=e.touches[0].clientY;dragging=true;},{passive:true});
+win.addEventListener('touchend',e=>{if(!dragging)return;dragging=false;const dx=e.changedTouches[0].clientX-dragStartX,dy=e.changedTouches[0].clientY-dragStartY;if(Math.abs(dx)>55&&Math.abs(dx)>Math.abs(dy)*1.2){currentIndex+=dx<0?1:-1;updateSlide();}},{passive:true});
+win.addEventListener('mousedown',e=>{if(e.target.matches('input,textarea,button'))return;dragStartX=e.clientX;dragging=true;});
+window.addEventListener('mouseup',e=>{if(!dragging)return;dragging=false;const dx=e.clientX-dragStartX;if(Math.abs(dx)>55){currentIndex+=dx<0?1:-1;updateSlide();}});
+window.addEventListener('beforeunload',()=>{for(const t of saveTimers.values())clearTimeout(t);});
+if(configReady)initFirebase();else{renderAuth();setStatus('Firebase setup required · guest mode available','error');$('authHint').textContent='You can continue without logging in. Firebase configuration is required for cloud sync.';}
+</script>
+</body>
+</html>
